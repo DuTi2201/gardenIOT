@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - IoT Smart Garden</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #16a085;
+            margin-top: 20px;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .method {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .url {
+            font-family: monospace;
+            color: #2c3e50;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Documentation - IoT Smart Garden</h1>
+    <p>Tài liệu API cho hệ thống IoT Smart Garden.</p>
+
+    <h2>Xác thực</h2>
+
+    <div class="endpoint">
+        <p><span class="method">POST</span> <span class="url">/api/auth/register</span> - Đăng ký người dùng mới</p>
+        <h3>Request Body:</h3>
+        <pre><code>{
+  "username": "user123",
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "Nguyễn Văn A"
+}</code></pre>
+        <h3>Response:</h3>
+        <pre><code>{
+  "success": true,
+  "message": "Đăng ký thành công",
+  "data": {
+    "user": {
+      "id": "60d5f8b8b8b8b8b8b8b8b8b8",
+      "username": "user123",
+      "email": "user@example.com",
+      "name": "Nguyễn Văn A"
+    },
+    "token": "jwt_token_here"
+  }
+}</code></pre>
+    </div>
+
+    <div class="endpoint">
+        <p><span class="method">POST</span> <span class="url">/api/auth/login</span> - Đăng nhập</p>
+        <h3>Request Body:</h3>
+        <pre><code>{
+  "username": "user123",
+  "password": "password123"
+}</code></pre>
+        <h3>Response:</h3>
+        <pre><code>{
+  "success": true,
+  "message": "Đăng nhập thành công",
+  "data": {
+    "user": {
+      "id": "60d5f8b8b8b8b8b8b8b8b8b8",
+      "username": "user123",
+      "email": "user@example.com",
+      "name": "Nguyễn Văn A"
+    },
+    "token": "jwt_token_here"
+  }
+}</code></pre>
+    </div>
+
+    <h2>Quản lý vườn</h2>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <span class="url">/api/gardens</span> - Lấy danh sách vườn</p>
+        <h3>Headers:</h3>
+        <pre><code>Authorization: Bearer jwt_token_here</code></pre>
+        <h3>Response:</h3>
+        <pre><code>{
+  "success": true,
+  "message": "Lấy danh sách vườn thành công",
+  "data": {
+    "count": 2,
+    "gardens": [
+      {
+        "id": "60d5f8b8b8b8b8b8b8b8b8b8",
+        "name": "Vườn rau",
+        "description": "Vườn rau gia đình",
+        "location": "Ban công",
+        "device_serial": "GARDEN123456",
+        "created_at": "2023-01-01T00:00:00.000Z",
+        "last_connected": "2023-01-02T00:00:00.000Z",
+        "is_connected": true
+      },
+      {
+        "id": "60d5f8b8b8b8b8b8b8b8b8b9",
+        "name": "Vườn hoa",
+        "description": "Vườn hoa cảnh",
+        "location": "Sân thượng",
+        "device_serial": "GARDEN654321",
+        "created_at": "2023-01-01T00:00:00.000Z",
+        "last_connected": null,
+        "is_connected": false
+      }
+    ]
+  }
+}</code></pre>
+    </div>
+
+    <h2>Dữ liệu cảm biến</h2>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <span class="url">/api/gardens/:id/data</span> - Lấy dữ liệu cảm biến mới nhất</p>
+        <h3>Headers:</h3>
+        <pre><code>Authorization: Bearer jwt_token_here</code></pre>
+        <h3>Response:</h3>
+        <pre><code>{
+  "success": true,
+  "message": "Lấy dữ liệu cảm biến thành công",
+  "data": {
+    "data": {
+      "id": "60d5f8b8b8b8b8b8b8b8b8b8",
+      "garden_id": "60d5f8b8b8b8b8b8b8b8b8b8",
+      "timestamp": "2023-01-02T00:00:00.000Z",
+      "temperature": 28.5,
+      "humidity": 65.2,
+      "light": 45.0,
+      "soil": 38.7,
+      "fan_status": true,
+      "light_status": false,
+      "pump_status": true,
+      "auto_mode": true
+    }
+  }
+}</code></pre>
+    </div>
+
+    <h2>Điều khiển thiết bị</h2>
+
+    <div class="endpoint">
+        <p><span class="method">POST</span> <span class="url">/api/gardens/:id/devices/:device/control</span> - Điều khiển thiết bị</p>
+        <h3>Headers:</h3>
+        <pre><code>Authorization: Bearer jwt_token_here</code></pre>
+        <h3>Request Body:</h3>
+        <pre><code>{
+  "state": true
+}</code></pre>
+        <h3>Response:</h3>
+        <pre><code>{
+  "success": true,
+  "message": "Đã gửi lệnh BẬT FAN",
+  "data": {
+    "device": "FAN",
+    "state": true
+  }
+}</code></pre>
+    </div>
+
+    <h2>Quản lý lịch trình</h2>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <span class="url">/api/gardens/:id/schedules</span> - Lấy danh sách lịch trình</p>
+        <h3>Headers:</h3>
+        <pre><code>Authorization: Bearer jwt_token_here</code></pre>
+        <h3>Response:</h3>
+        <pre><code>{
+  "success": true,
+  "message": "Lấy danh sách lịch trình thành công",
+  "data": {
+    "count": 2,
+    "schedules": [
+      {
+        "id": "60d5f8b8b8b8b8b8b8b8b8b8",
+        "device": "FAN",
+        "action": true,
+        "time": "06:00",
+        "days": [1, 2, 3, 4, 5],
+        "days_text": "T2, T3, T4, T5, T6",
+        "active": true,
+        "created_at": "2023-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "60d5f8b8b8b8b8b8b8b8b8b9",
+        "device": "LIGHT",
+        "action": false,
+        "time": "18:00",
+        "days": [0, 6],
+        "days_text": "CN, T7",
+        "active": true,
+        "created_at": "2023-01-01T00:00:00.000Z"
+      }
+    ]
+  }
+}</code></pre>
+    </div>
+
+    <h2>Socket.IO</h2>
+
+    <div class="endpoint">
+        <h3>Kết nối:</h3>
+        <pre><code>const socket = io('http://localhost:3001', {
+  auth: {
+    token: 'your_jwt_token'
+  }
+});</code></pre>
+        <h3>Sự kiện:</h3>
+        <pre><code>// Tham gia phòng cho vườn cụ thể
+socket.emit('join_garden', gardenId);
+
+// Lắng nghe dữ liệu cảm biến mới
+socket.on('sensor_data', (data) => {
+  console.log('Dữ liệu cảm biến mới:', data);
+});
+
+// Lắng nghe trạng thái kết nối
+socket.on('connection_status', (data) => {
+  console.log('Trạng thái kết nối:', data);
+});</code></pre>
+    </div>
+
+    <h2>MQTT</h2>
+
+    <div class="endpoint">
+        <h3>Chủ đề MQTT:</h3>
+        <pre><code>garden/{deviceSerial}/data    // Dữ liệu từ thiết bị gửi đến server
+garden/{deviceSerial}/command // Lệnh từ server gửi đến thiết bị
+garden/{deviceSerial}/status  // Trạng thái kết nối của thiết bị
+garden/{deviceSerial}/settings // Cài đặt từ server gửi đến thiết bị</code></pre>
+    </div>
+</body>
+</html> 
